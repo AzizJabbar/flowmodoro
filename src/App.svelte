@@ -12,6 +12,7 @@
   let initialTime = null;
   let level = 0.28;
   let isModalOpen = false;
+  let lastSeenTime = 0;
 
   requestNotificationPermission();
 
@@ -113,6 +114,38 @@
   function handleCloseModal() {
     isModalOpen = false;
   }
+
+  function handleVisibilityChange() {
+    if (document.hidden) {
+      lastSeenTime = Date.now()
+
+    } else {
+      if (lastSeenTime !== 0){
+
+      const timePassed = Date.now() - lastSeenTime;
+      if($title === "Break"){
+        const timeLeft = initialTime - timePassed;
+        if (timeLeft < 0) {
+          clearInterval(interval);
+        isRunning = false;
+        handleFlowChange();
+        sendNotification("Time's up!", "Time to focus again!");
+        initialTime = null;
+        }
+        else{
+          time -= timePassed;
+        }
+      }
+      else{
+        time += timePassed;
+      }
+      }
+
+    }
+    
+  }
+
+  $: document.addEventListener('visibilitychange', handleVisibilityChange);
 
 </script>
 
