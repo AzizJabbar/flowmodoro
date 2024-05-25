@@ -104,6 +104,7 @@
   function handleHomeButtonClick() {
     title.set("Flowmodoro");
     initialTime = 0;
+    lastSeenTime = 0;
     reset();
   }
 
